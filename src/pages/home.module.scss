@@ -1,1 +1,50 @@
 // TODO
+.posts {
+  max-width: 700px;
+  a {
+    display: block;
+    & + a {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+    }
+    strong {
+      font-size: 1.75rem;
+      letter-spacing: -0.031rem;
+      line-height: 2.125rem;
+      font-weight: 700;
+      color: var(--heading);
+    }
+    p {
+      font-family: 'Inter';
+      font-size: 1.125rem;
+      line-height: 1.3rem;
+      margin-top: 0.5rem;
+    }
+
+    .authorGroup {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-top: 1.5rem;
+      width: 16rem;
+      color: var(--info);
+      font-size: 0.875rem;
+      line-height: 1.1rem;
+
+      div {
+        display: flex;
+        align-items: center;
+        img {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+.buttonLoadMore {
+  font-weight: 600;
+  color: var(--highlight);
+  line-height: 2.125rem;
+  font-size: 1.125rem;
+}
