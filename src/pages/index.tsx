@@ -1,10 +1,15 @@
 import { GetStaticProps } from 'next';
-
+import { FiCalendar, FiUser } from 'react-icons/fi';
+import Prismic from '@prismicio/client';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import Head from 'next/head';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import ApiSearchResponse from '@prismicio/client/types/ApiSearchResponse';
 import { getPrismicClient } from '../services/prismic';
-
-import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
+import commonStyles from '../styles/common.module.scss';
 
 interface Post {
   uid?: string;
@@ -23,10 +28,63 @@ interface PostPagination {
 
 interface HomeProps {
   postsPagination: PostPagination;
+  preview: boolean;
 }
 
-export default function Home(): JSX.Element {
-  // TODO
+export default function Home({
+  postsPagination,
+  preview,
+}: HomeProps): JSX.Element {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [nextPage, setNextPage] = useState('');
+  // const [handleData, setHandleData] = useState([]);
+  // };
+  // function handleLoadPagination(): void {
+  // fetch(nextPage)
+  //   .then(res => res.json)
+  //   .then(data => {
+  //     const formattedData = data.map(post => {
+  //       return {
+  //         uid: post.uid,
+  //         first_publication_date: post.first_publication_date,
+  //         data: {
+  //           title: post.data.title,
+  //           subtitle: post.data.subtitle,
+  //           author: post.data.author,
+  //         },
+  //       };
+  //     });
+  //     setPosts([...posts, ...formattedData]);
+  //     setNextPage(data.next_page);
+  //   });
+  // }
+  useEffect(() => {
+    setPosts(postsPagination.results);
+    setNextPage(postsPagination.next_page);
+  }, [postsPagination.next_page, postsPagination.results]);
+
+  async function handleLoadPagination(): Promise<void> {
+    const loadPostsResponse: ApiSearchResponse = await (
+      await fetch(nextPage)
+    ).json();
+
+    const formattedPosts: Post[] = loadPostsResponse.results.map(post => {
+      return {
+        uid: post.uid,
+        first_publication_date: post.first_publication_date,
+        data: {
+          title: post.data.title,
+          subtitle: post.data.subtitle,
+          author: post.data.author,
+        },
+      };
+    });
+
+    setPosts(oldPosts => [...oldPosts, ...formattedPosts]);
+    setNextPage(loadPostsResponse.next_page);
+    console.log(loadPostsResponse.results);
+  }
+
   return (
     <>
       <Head>
@@ -35,61 +93,79 @@ export default function Home(): JSX.Element {
 
       <main className={commonStyles.container}>
         <div className={styles.posts}>
-          <a>
-            <strong> Como Utilizar Hooks</strong>
-            <p>Pensando em sincronização em vez de ciclos de vida.</p>
-            <div className={styles.authorGroup}>
-              <div>
-                <img src="/images/calendar.svg" alt="" srcSet="" />
-                <time>15 Mar 2021</time>
-              </div>
-              <div>
-                <img src="/images/user.svg" alt="" srcSet="" />
-                <span>Joseph Oliveira</span>
-              </div>
-            </div>
-          </a>
-          <a>
-            <strong> Como Utilizar Hooks</strong>
-            <p>Pensando em sincronização em vez de ciclos de vida.</p>
-            <div className={styles.authorGroup}>
-              <div>
-                <img src="/images/calendar.svg" alt="" srcSet="" />
-                <time>15 Mar 2021</time>
-              </div>
-              <div>
-                <img src="/images/user.svg" alt="" srcSet="" />
-                <span>Joseph Oliveira</span>
-              </div>
-            </div>
-          </a>
-          <a>
-            <strong> Como Utilizar Hooks</strong>
-            <p>Pensando em sincronização em vez de ciclos de vida.</p>
-            <div className={styles.authorGroup}>
-              <div>
-                <img src="/images/calendar.svg" alt="" srcSet="" />
-                <time>15 Mar 2021</time>
-              </div>
-              <div>
-                <img src="/images/user.svg" alt="" srcSet="" />
-                <span>Joseph Oliveira</span>
-              </div>
-            </div>
-          </a>
+          {posts &&
+            posts.map(post => (
+              <Link key={post.uid} href={`/post/${post.uid}`}>
+                <a>
+                  <strong> {post.data.title}</strong>
+                  <p>{post.data.subtitle}</p>
+                  <div className={styles.authorGroup}>
+                    <div>
+                      <FiCalendar size={20} />
+                      <time>{post.first_publication_date}</time>
+                    </div>
+                    <div>
+                      <FiUser size={20} />
+                      <span>{post.data.author}</span>
+                    </div>
+                  </div>
+                </a>
+              </Link>
+            ))}
         </div>
       </main>
-      <div className={`${styles.buttonLoadMore}${commonStyles.container}`}>
-        {' '}
-        Carregar Mais Posts
+      <div className={`${commonStyles.container}`}>
+        {nextPage ? (
+          <button
+            type="button"
+            onClick={handleLoadPagination}
+            className={styles.buttonLoadPosts}
+          >
+            Carregar mais posts
+          </button>
+        ) : (
+          <p> Não tem mais posts para carregar</p>
+        )}
+        {/* {preview && <PreviewButton />} */}
       </div>
     </>
   );
 }
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient();
-//   // const postsResponse = await prismic.query(TODO);
+export const getStaticProps: GetStaticProps<HomeProps> = async ({
+  preview = false,
+  previewData,
+}) => {
+  const prismic = getPrismicClient();
+  const postsResponse = await prismic.query(
+    [Prismic.Predicates.at('document.type', 'posts')],
+    {
+      fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
+      pageSize: 2,
+      ref: previewData?.ref ?? null,
+    }
+  );
+  // format(        new Date(post.first_publication_date),        `dd / MMM / yyyy`,        { locale: ptBR }),
+  const posts = postsResponse.results.map(post => {
+    return {
+      uid: post.uid,
 
-//   // TODO
-// };
+      first_publication_date: post.first_publication_date,
+
+      data: {
+        title: post.data.title,
+        subtitle: post.data.subtitle,
+        author: post.data.author,
+      },
+    };
+  });
+  return {
+    props: {
+      postsPagination: {
+        next_page: postsResponse.next_page,
+        results: posts,
+      },
+      preview,
+    },
+  };
+};

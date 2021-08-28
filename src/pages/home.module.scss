@@ -25,7 +25,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
       margin-top: 1.5rem;
       width: 16rem;
       color: var(--info);
@@ -35,16 +34,20 @@
       div {
         display: flex;
         align-items: center;
-        img {
+        svg {
           margin-right: 0.5rem;
         }
       }
     }
   }
 }
-.buttonLoadMore {
+.buttonLoadPosts {
   font-weight: 600;
   color: var(--highlight);
   line-height: 2.125rem;
   font-size: 1.125rem;
+  border: 0;
+  background-color: transparent;
+  width: 100%;
+  text-align: left;
 }
