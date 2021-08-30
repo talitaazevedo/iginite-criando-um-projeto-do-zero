@@ -6885,7 +6885,7 @@ pretty-format@^26.0.0, pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
-prismic-cli@^4.0.7:
+prismic-cli@4.0.7, prismic-cli@^4.0.7:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/prismic-cli/-/prismic-cli-4.0.7.tgz#8f23b610541f8efb7ed0f1d787159a34b5c3db7f"
   integrity sha512-8WCreueb2BlwN1b2erZ6LVo9l6KLGi0RfrF6F8TpoZnpNjz+ILsj6LVvvsuBm4N6ku7EDkLLwuzQhTFISQL7ww==
