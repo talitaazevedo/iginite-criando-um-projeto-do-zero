@@ -21,24 +21,7 @@
       margin-top: 0.5rem;
     }
 
-    .authorGroup {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 1.5rem;
-      width: 16rem;
-      color: var(--info);
-      font-size: 0.875rem;
-      line-height: 1.1rem;
-
-      div {
-        display: flex;
-        align-items: center;
-        svg {
-          margin-right: 0.5rem;
-        }
-      }
-    }
+ 
   }
 }
 .buttonLoadPosts {

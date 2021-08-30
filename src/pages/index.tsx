@@ -102,7 +102,13 @@ export default function Home({
                   <div className={styles.authorGroup}>
                     <div>
                       <FiCalendar size={20} />
-                      <time>{post.first_publication_date}</time>
+                      <time>
+                        {format(
+                          new Date(post.first_publication_date),
+                          `dd MMM yyyy`,
+                          { locale: ptBR }
+                        )}
+                      </time>
                     </div>
                     <div>
                       <FiUser size={20} />

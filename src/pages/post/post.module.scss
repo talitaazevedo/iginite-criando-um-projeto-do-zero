@@ -1,1 +1,53 @@
 // TODO
+
+.postHeader {
+  width: 100%;
+  max-height: 400px;
+
+  display: flex;
+  overflow: hidden; /* Faz o div não aumentar a altura por causa da imagem */
+  img {
+    width: 100%;
+  }
+}
+.post {
+  h1 {
+    font-size: 3rem;
+    letter-spacing: -0.031rem;
+  }
+}
+.postContent {
+  margin: 0 auto;
+  margin-top: 4rem;
+
+  h2 {
+    font-weight: 700;
+    line-height: 2.513rem;
+    padding-bottom: 1.513rem;
+    font-size: 2.25rem;
+    letter-spacing: -0.031rem;
+    color: var(--heading);
+  }
+  div {
+    p {
+      font-size: 1.125rem;
+      line-height: 1.513rem;
+      color: var(--body);
+      & + p {
+        padding-bottom: 1.513rem;
+      }
+      strong {
+        font-weight: 700;
+        color: var(--highlight);
+      }
+      a {
+        display: inline;
+        color: var(--highlight);
+        transition: 0.2s;
+        &:hover {
+          color: var(--info);
+        }
+      }
+    }
+  }
+}
