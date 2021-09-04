@@ -99,7 +99,7 @@ export default function Home({
                 <a>
                   <strong> {post.data.title}</strong>
                   <p>{post.data.subtitle}</p>
-                  <div className={styles.authorGroup}>
+                  <div className={commonStyles.authorGroup}>
                     <div>
                       <FiCalendar size={20} />
                       <time>
